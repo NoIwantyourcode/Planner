@@ -1,0 +1,14 @@
+#board {
+    display: flex;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.coloumn {
+    background: #e8e8e8;
+    border-radius: 12px;
+    padding: 1rem;
+    width: 1rem;
+    width: 280px;
+    min-height: 400px;
+}
