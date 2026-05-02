@@ -19,5 +19,54 @@
     padding: 0.75rem;
     margin-bottom: 0.5rem;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.deleteBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #aaa;
+}
+
+.deleteBtn:hover {
+    color: red;
+}
+
+.priority {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 100px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.low {
+    background: #d4edda;
+    color: #155724
+}
+
+.medium {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.high {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.due {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.25rem;
+}
+
+.overdure {
+    color: #e05a4e;
+    font-weight: bold;
 }
