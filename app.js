@@ -59,6 +59,11 @@ function renderCards() {
             document.getElementById('cardDialog').close();
         });
     });
+
+    document.querySelectorAll('.column').forEach(col => {
+        const count = cards.filter(c => c.column === col.id).length;
+        col.querySelector('.count').textContent = count;
+    })
 };
 
 document.querySelectorAll('.column').forEach(col => {
