@@ -35,7 +35,9 @@ function renderCards() {
 
         cardE1.appendChild(deleteBtn);
         cardE1.dataset.id = card.it;
-        document.querySelector(`#${card.column} .cards`).appendChild(cardE1);
+        const container = document.querySelector(`#${card.column} .cards`);
+        if (!container) return;
+        container.appendChild(cardE1);
 
         cardE1.draggable = true;
 
@@ -44,6 +46,19 @@ function renderCards() {
             setTimeout(() => cardE1.classList.add('dragging'), 0);
             window.draggedId = card.id;
         });
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'edit';
+        editBtn.classList.add('editBtn');
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const newTitle = prompt('Edit title:', card.title);
+            if (!newTitle) return;
+            card.title = newTitle;
+            localStorage.setItem('cards', JSON.stringify(cards));
+            renderCards();
+        })
+        cardE1.appendChild(editBtn);
 
         cardE1.addEventListener('click', () => {
             document.getElementById('dialogTitle').textContent = card.title;
