@@ -35,8 +35,29 @@ function renderCards() {
         cardE1.appendChild(deleteBtn);
         cardE1.dataset.id = card.it;
         document.querySelector(`#${card.column} .cards`).appendChild(cardE1);
-    })
-}
+
+        cardE1.draggable = true;
+
+        cardE1.addEventListener('dragstart', () => {
+            cardE1.classList.add('dragging');
+            setTimeout(() => cardE1.classList.add('dragging'), 0);
+            window.draggedId = card.id;
+        });
+    });
+};
+
+document.querySelectorAll('.column').forEach(col => {
+    col.addEventListener('dragover', e => e.preventDefault());
+    col.addEventListener('drop', () => {
+        const columnId = col.id;
+        const c = cards.find(c => c.id === window.draggedId);
+        if (c) {
+            c.column = columnId;
+            localStorage.setItem('cards', JSON.stringify(cards));
+            renderCards();
+        };
+    });
+});
 
 document.querySelectorAll('.addCardBtn').forEach(btn => {
     btn.addEventListener('click', () => {
