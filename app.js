@@ -1,4 +1,5 @@
 let cards = JSON.parse(localStorage.getItem('cards') || '[]');
+let columns = JSON.parse(localStorage.getItem('columns') || '["todo","inprogress","done"]')
 
 function renderCards() {
     document.querySelectorAll('.cards').forEach(col => col.innerHTML = '');
@@ -66,50 +67,82 @@ function renderCards() {
     })
 };
 
-document.querySelectorAll('.column').forEach(col => {
-    col.addEventListener('dragover', e => e.preventDefault());
-    col.addEventListener('drop', () => {
-        const columnId = col.id;
-        const c = cards.find(c => c.id === window.draggedId);
-        if (c) {
-            c.column = columnId;
+function setupDragListeners() {
+    document.querySelectorAll('.column').forEach(col => {
+        col.addEventListener('dragover', e => e.preventDefault());
+        col.addEventListener('drop', () => {
+            const columnId = col.id;
+            const c = cards.find(c => c.id === window.draggedId);
+            if (c) {
+                c.column = columnId;
+                localStorage.setItem('cards', JSON.stringify(cards));
+                renderCards();
+            };
+        });
+    });
+}
+
+function setupAddCardListeners() {
+    document.querySelectorAll('.addCardBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const title = prompt('Card title');
+            const priority = prompt('Priority (low, medium, high):');
+            const due = prompt('Due Date (YYYY-MM-DD):')
+            if (!title) return;
+            const card = {
+                id: Date.now(),
+                title: title,
+                priority: priority || 'low',
+                due: due || null,
+                description: '',
+                column: btn.dataset.column
+            };
+            cards.push(card);
             localStorage.setItem('cards', JSON.stringify(cards));
             renderCards();
-        };
-    });
-});
+        });
+    })
+}
 
-document.querySelectorAll('.addCardBtn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const title = prompt('Card title');
-        const priority = prompt('Priority (low, medium, high):');
-        const due = prompt('Due Date (YYYY-MM-DD):')
-        if (!title) return;
-        const card = {
-            id: Date.now(),
-            title: title,
-            priority: priority || 'low',
-            due: due || null,
-            description: '',
-            column: btn.dataset.column
-        };
-        cards.push(card);
-        localStorage.setItem('cards', JSON.stringify(cards));
-        renderCards();
+function renderColumns() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+
+    columns.forEach(col => {
+        const colE1 = document.createElement('div');
+        colE1.classList.add('column');
+        colE1.id = col;
+        colE1.innerHTML = `
+         <div class="col-header">
+            <h2>${col} <span class="count">0</span></h2>
+            <button class="deleteColBtn" data-column="${col}">x</button>
+         </div>
+         <button class="addCardBtn" data-column="${col}">Add card</button>
+         <div class="cards"></div>
+        `;
+        board.appendChild(colE1);
+
+        colE1.querySelector('.deleteColBtn').addEventListener('click', () => {
+            if (!confirm(`delete "${col}" and all of its cards?`)) return;
+            columns = columns.filter(c => c !== col);
+            localStorage.setItem('columns', JSON.stringify(columns));
+            localStorage.setItem('cards', JSON.stringify(cards));
+            renderColumns();
+        })
     });
+
+    renderCards();
+    setupDragListeners();
+    setupAddCardListeners();
+}
+
+document.getElementById('addColumn').addEventListener('click', () => {
+    const name = prompt('Column name:');
+    if (!name) return;
+    const id = name.toLowerCase().replace(/\s+/g, '');
+    columns.push(id);
+    localStorage.setItem('columns', JSON.stringify(columns));
+    renderColumns();
 })
 
-document.getElementById('search').addEventListener('input', () => {
-    const query = document.getElementById('search').value.toLowerCase();
-    document.querySelectorAll('.card').forEach(cardE1 => {
-        const title = cardE1.textContent.toLowerCase();
-        if (title.includes(query)) {
-            cardE1.style.display = '';
-        } else {
-            cardE1.style.display = 'none'
-        }
-    });
-    console.log(query)
-});
-
-renderCards();
+renderColumns();
