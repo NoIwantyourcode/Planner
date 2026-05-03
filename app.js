@@ -13,6 +13,15 @@ function renderCards() {
         tag.textContent = card.priority;
         cardE1.prepend(tag);
 
+        if (card.due) {
+            const dueE1 = document.createElement('div');
+            dueE1.classList.add('due');
+            dueE1.textContent = card.due;
+            const isOverdue = new Date(card.due) < new Date();
+            if (isOverdue) dueE1.classList.add('overdue');
+            cardE1.appendChild(dueE1);
+        }
+
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'x';
         deleteBtn.classList.add('deleteBtn');
@@ -33,7 +42,7 @@ document.querySelectorAll('.addCardBtn').forEach(btn => {
     btn.addEventListener('click', () => {
         const title = prompt('Card title');
         const priority = prompt('Priority (low, medium, high):');
-        const due = prompt('Due Date (DD/MM/YY):')
+        const due = prompt('Due Date (YYYY-MM-DD):')
         if (!title) return;
         const card = {
             id: Date.now(),
