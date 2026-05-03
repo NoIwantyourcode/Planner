@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <input type="text" id="search" placeholder="Search for Cards...">
         <div id="board">
             <div class="column" id="todo">
                 <h2>Todo</h2>
@@ -21,6 +22,12 @@
                 <div class="cards"></div>
             </div>
         </div>
+        <dialog id="cardDialog">
+            <h3 id="dialogTitle"></h3>
+            <textarea id="dialogDesc" placeholder="Add a description..."></textarea>
+            <button id="saveDesc">Save</button>
+            <button id="closeDialog">Close</button>
+        </dialog>
         <script src="app.js"></script>
     </body>
 </html>

@@ -43,6 +43,21 @@ function renderCards() {
             setTimeout(() => cardE1.classList.add('dragging'), 0);
             window.draggedId = card.id;
         });
+
+        cardE1.addEventListener('click', () => {
+            document.getElementById('dialogTitle').textContent = card.title;
+            document.getElementById('dialogDesc').value = card.description || '';
+            document.getElementById('cardDialog').showModal();
+            document.getElementById('saveDesc').onclick = () => {
+                card.description = document.getElementById('dialogDesc').value;
+                localStorage.setItems('cards', JSON.stringify(cards));
+                document.getElementById('cardDialog').close();
+            };
+        });
+
+        document.getElementById('closeDialog').addEventListener('click', () => {
+            document.getElementById('cardDialog').close();
+        });
     });
 };
 
@@ -70,6 +85,7 @@ document.querySelectorAll('.addCardBtn').forEach(btn => {
             title: title,
             priority: priority || 'low',
             due: due || null,
+            description: '',
             column: btn.dataset.column
         };
         cards.push(card);
@@ -77,5 +93,18 @@ document.querySelectorAll('.addCardBtn').forEach(btn => {
         renderCards();
     });
 })
+
+document.getElementById('search').addEventListener('input', () => {
+    const query = document.getElementById('search').value.toLowerCase();
+    document.querySelectorAll('.card').forEach(cardE1 => {
+        const title = cardE1.textContent.toLowerCase();
+        if (title.includes(query)) {
+            cardE1.style.display = '';
+        } else {
+            cardE1.style.display = 'none'
+        }
+    });
+    console.log(query)
+});
 
 renderCards();
