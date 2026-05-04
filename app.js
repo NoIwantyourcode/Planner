@@ -1,6 +1,6 @@
 let cards = JSON.parse(localStorage.getItem('cards') || '[]');
 let columns = JSON.parse(localStorage.getItem('columns') || '["todo","inprogress","done"]')
-let columnColors = JSON.parse(localStorage.getItem('columns') || '{}')
+let columnColors = JSON.parse(localStorage.getItem('columnColors') || '{}')
 
 function renderCards() {
     document.querySelectorAll('.cards').forEach(col => col.innerHTML = '');
@@ -131,34 +131,43 @@ function setupAddCardListeners() {
     document.querySelectorAll('.addCardBtn').forEach(btn => {
         btn.addEventListener('click', () => {
             const col = btn.closest('.column').querySelector('.cards');
+            if (!col) return;
+            if (col.querySelector('.newCardForm')) return;
 
-            if (col.querySelector('.newCardInput')) return;
+            const form = document.createElement('div');
+            form.classList.add('newCardForm');
+            form.innerHTML = `
+                <input type="text" class="newCardTitle" placeholder="Card Title...">
+                <select class="newCardPriority">
+                    <option value="low">low</option>
+                    <option value="medium">medium</option>
+                    <option value="high">High</option>
+                </select>
+                <input type="date" class="newCardDue">
+                <button class="submitCard">Add</button>
+                <button class="cancelCard">Cancel</button>
+            `;
+            col.prepend(form);
+            form.querySelector('.newCardTitle').focus();
 
-            const input = document.createElement('input')
-            input.type = 'text';
-            input.classList.add('newCardInput');
-            input.placeholder = 'Card title...';
-            col.prepend(input);
-            input.focus();
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && input.value.trim()) {
-                    const card = {
-                        id: Date.now(),
-                        title: input.value.trim(),
-                        priority: 'low',
-                        due: null,
-                        description: '',
-                        column: btn.dataset.column
-                    };
-                    cards.push(card)
-                    localStorage.setItem('cards', JSON.stringify(cards));
-                    renderCards();
-                }
-                if (e.key === 'Escape' || e.key === 'Enter') {
-                    input.remove()
-                }
+            form.querySelector('.submitCard').addEventListener('click', () => {
+                const title = form.querySelector('.newCardTitle').value.trim();
+                if (!title) return;
+                const card = {
+                    id: Date.now(),
+                    title,
+                    priority: form.querySelector('.newCardPriority').value,
+                    due: form.querySelector('.newCardDue').value || null,
+                    description: '',
+                    column: btn.dataset.column
+                };
+                cards.push(card);
+                localStorage.setItem('cards', JSON.stringify(cards));
+                form.remove();
+                renderCards();
             });
+
+            form.querySelector('.cancelCard').addEventListener('click', () => form.remove());
         });
     });
 }
