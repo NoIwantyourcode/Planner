@@ -1,80 +1,136 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #0e0e10;
+    color: #f0f0f0;
+    font-family: sans-serif;
+    padding: 1.5rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#topbar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    justify-content: center;
+}  
+
+#search {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1a1a1f;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+    width: 220px;
+}
+
 #board {
     display: flex;
     gap: 1rem;
-    padding: 2rem;
+    align-items: flex-start;
+    justify-content: center;
 }
 
-.coloumn {
-    background: #e8e8e8;
+.column {
+    background: #1a1a1f;
     border-radius: 12px;
     padding: 1rem;
-    width: 1rem;
     width: 280px;
     min-height: 400px;
 }
 
+.col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.col-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: #f0f0f0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.count {
+    background: #333;
+    border-radius: 100px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: normal;
+    margin-left: 0.4rem;
+}
+
 .card {
-    background: white;
+    background: #2a2a32;
     border-radius: 8px;
     padding: 0.75rem;
     margin-bottom: 0.5rem;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.4rem;
     align-items: center;
+    color: #f0f0f0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-.deleteBtn {
+.card:hover { background: #32323c; }
+
+button {
+    background: #333;
+    color: #f0f0f0;
+    border: none;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+button:hover { background: #444; }
+
+.addCardBtn {
+    width: 100%;
+    margin-top: 0.5rem;
+    background: transparent;
+    border: 1px dashed #444;
+    color: #888;
+}
+
+.addCardBtn:hover { border-color: #888; color: #f0f0f0; }
+
+.deleteBtn, .editBtn, .moveBtn {
     background: none;
     border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: #aaa;
+    color: #666;
+    padding: 0.1rem 0.3rem;
+    font-size: 0.85rem;
 }
 
-.deleteBtn:hover {
-    color: red;
+.deleteBtn:hover { color: #e05a4e; }
+.editBtn:hover, .moveBtn:hover { color: #f0f0f0; }
+
+.newCardForm {
+    background: #2a2a32;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.priority {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 100px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.low {
-    background: #d4edda;
-    color: #155724
-}
-
-.medium {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.high {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.due {
-    font-size: 0.75rem;
-    color: #888;
-    margin-top: 0.25rem;
-}
-
-.overdure {
-    color: #e05a4e;
-    font-weight: bold;
-}
-
-.count {
-    background: #ddd;
-    border-radius: 100px;
-    padding: 0.1rem 0.5rem;
-    font-size: 0.8rem;
-    font-weight: normal;
+.newCardForm input, .newCardForm select {
+    background: #1a1a1f;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #f0f0f0;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
 }
