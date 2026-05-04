@@ -1,5 +1,6 @@
 let cards = JSON.parse(localStorage.getItem('cards') || '[]');
 let columns = JSON.parse(localStorage.getItem('columns') || '["todo","inprogress","done"]')
+let columnColors = JSON.parse(localStorage.getItem('columns') || '{}')
 
 function renderCards() {
     document.querySelectorAll('.cards').forEach(col => col.innerHTML = '');
@@ -74,6 +75,35 @@ function renderCards() {
         document.getElementById('closeDialog').addEventListener('click', () => {
             document.getElementById('cardDialog').close();
         });
+
+        const moveLeft = document.createElement('button');
+        moveLeft.textContent = '<';
+        moveLeft.classList.add('moveBtn');
+        moveLeft.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const currentIndex = columns.indexOf(card.column);
+            if (currentIndex > 0) {
+                card.column = columns[currentIndex - 1];
+                localStorage.setItem('cards', JSON.stringify(cards));
+                renderCards();
+            }
+        })
+
+        const moveRight = document.createElement('button');
+        moveRight.textContent = '>';
+        moveRight.classList.add('moveBtn');
+        moveRight.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const currentIndex = columns.indexOf(card.column);
+            if (currentIndex < columns.length - 1) {
+                card.column = columns[currentIndex + 1];
+                localStorage.setItem('cards', JSON.stringify(cards));
+                renderCards();
+            }
+        });
+        
+        cardE1.appendChild(moveLeft);
+        cardE1.appendChild(moveRight);
     });
 
     document.querySelectorAll('.column').forEach(col => {
@@ -100,23 +130,37 @@ function setupDragListeners() {
 function setupAddCardListeners() {
     document.querySelectorAll('.addCardBtn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const title = prompt('Card title');
-            const priority = prompt('Priority (low, medium, high):');
-            const due = prompt('Due Date (YYYY-MM-DD):')
-            if (!title) return;
-            const card = {
-                id: Date.now(),
-                title: title,
-                priority: priority || 'low',
-                due: due || null,
-                description: '',
-                column: btn.dataset.column
-            };
-            cards.push(card);
-            localStorage.setItem('cards', JSON.stringify(cards));
-            renderCards();
+            const col = btn.closest('.column').querySelector('.cards');
+
+            if (col.querySelector('.newCardInput')) return;
+
+            const input = document.createElement('input')
+            input.type = 'text';
+            input.classList.add('newCardInput');
+            input.placeholder = 'Card title...';
+            col.prepend(input);
+            input.focus();
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && input.value.trim()) {
+                    const card = {
+                        id: Date.now(),
+                        title: input.value.trim(),
+                        priority: 'low',
+                        due: null,
+                        description: '',
+                        column: btn.dataset.column
+                    };
+                    cards.push(card)
+                    localStorage.setItem('cards', JSON.stringify(cards));
+                    renderCards();
+                }
+                if (e.key === 'Escape' || e.key === 'Enter') {
+                    input.remove()
+                }
+            });
         });
-    })
+    });
 }
 
 function renderColumns() {
@@ -125,17 +169,27 @@ function renderColumns() {
 
     columns.forEach(col => {
         const colE1 = document.createElement('div');
+        if (columnColors[col]) {
+            colE1.style.background = columnColors[col];
+        };
         colE1.classList.add('column');
         colE1.id = col;
         colE1.innerHTML = `
          <div class="col-header">
             <h2>${col} <span class="count">0</span></h2>
+            <input type="color" class="colorPicker" value="#e0e0e0">
             <button class="deleteColBtn" data-column="${col}">x</button>
          </div>
          <button class="addCardBtn" data-column="${col}">Add card</button>
          <div class="cards"></div>
         `;
         board.appendChild(colE1);
+
+        colE1.querySelector('.colorPicker').addEventListener('input', (e) => {
+            columnColors[col] = e.target.value;
+            colE1.style.background = e.target.value;
+            localStorage.setItem('columnColors', JSON.stringify(columnColors));
+        })
 
         colE1.querySelector('.deleteColBtn').addEventListener('click', () => {
             if (!confirm(`delete "${col}" and all of its cards?`)) return;
