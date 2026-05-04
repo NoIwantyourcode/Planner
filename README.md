@@ -4,7 +4,13 @@ This is a planner to help me organize myself
 
 # Features
 
-1. 
+1. Add your own tasks, get Organized easily!
+2. never miss a due date, This website will show you the due date
+3. priority, You can set certain tasks different priority levels so you can focus on the ones that matter
+4. Add your own columns to organize stuff better
+5. add descriptions to your task by clicking on them give more detail
+6. drag your tasks to different columns to represent how much work has been done
+7. search for your cards to find them easier
 
 # Tech Stack
 

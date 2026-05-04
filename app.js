@@ -53,11 +53,23 @@ function renderCards() {
         editBtn.classList.add('editBtn');
         editBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const newTitle = prompt('Edit title:', card.title);
-            if (!newTitle) return;
-            card.title = newTitle;
-            localStorage.setItem('cards', JSON.stringify(cards));
-            renderCards();
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = card.title;
+            input.classList.add('editInput');
+            cardE1.replaceChild(input, cardE1.querySelector('.card-title') || input)
+            cardE1.textContent = '';
+            cardE1.appendChild(input);
+            input.focus();
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && input.value.trim()) {
+                    card.title = input.value.trim();
+                    localStorage.setItem('cards', JSON.stringify(cards));
+                    renderCards();
+                }
+                if (e.key === 'Escape') renderCards();
+            })
         })
         cardE1.appendChild(editBtn);
 
